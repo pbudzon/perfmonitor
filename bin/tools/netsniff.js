@@ -97,6 +97,8 @@ var page = require('webpage').create(),
     system = require('system');
 page.startTime = new Date();
 
+var loadingRequests = 0;
+
 if (system.args.length === 1) {
     console.log('Usage: netsniff.js <some URL>');
     phantom.exit(1);
@@ -126,9 +128,11 @@ if (system.args.length === 1) {
 
     page.onResourceReceived = function (res) {
         if (res.stage === 'start') {
+            loadingRequests++;
             page.resources[res.id].startReply = res;
         }
         if (res.stage === 'end') {
+            loadingRequests--;
             page.resources[res.id].endReply = res;
         }
     };
@@ -140,14 +144,14 @@ if (system.args.length === 1) {
             phantom.exit(1);
         } else {
             page.endTime = new Date();
-            setTimeout(function() {
+            while(loadingRequests > 0)
                 page.title = page.evaluate(function () {
                     return document.title;
                 });
                 har = createHAR(page.address, page.title, page.startTime, page.resources);
                 console.log(JSON.stringify(har, undefined, 4));
                 phantom.exit();
-            }, 20000);
-        }
+            }
+       
     });
 }
