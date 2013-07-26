@@ -1,5 +1,6 @@
 from celery import Celery
-from subprocess import check_output, CalledProcessError
+import subprocess
+from subprocess CalledProcessError
 import os
 import json
 from pymongo import MongoClient
