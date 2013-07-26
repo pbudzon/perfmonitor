@@ -104,13 +104,15 @@ if (system.args.length === 1) {
     page.address = system.args[1];
     page.resources = [];
 
-    page.onLoadStarted = function () {
+    /*page.onLoadStarted = function () {
         page.startTime = new Date();
     };
 
     page.onLoadFinished = function(status) {
-        page.endTime = new Date();
-    }
+        if (status === 'success') {
+            page.endTime = new Date();
+        }
+    }*/
 
     page.onResourceRequested = function (req) {
         page.resources[req.id] = {
@@ -132,15 +134,17 @@ if (system.args.length === 1) {
 
     page.open(page.address, function (status) {
         var har;
+        page.startTime = new Date();
         if (status !== 'success') {
             console.log('FAIL to load the address');
             phantom.exit(1);
         } else {
+            page.endTime = new Date();
             setTimeout(function() {
                 page.title = page.evaluate(function () {
                     return document.title;
                 });
-                har = createHAR(page.address, page.title, page.startTime, page.resources);
+                har = createHAR(page.address, page.title, page.startTime, page.endTime, page.resources);
                 console.log(JSON.stringify(har, undefined, 4));
                 phantom.exit();
             }, 20000);
