@@ -95,7 +95,6 @@ function createHAR(address, title, startTime, resources)
 
 var page = require('webpage').create(),
     system = require('system');
-page.startTime = new Date();
 
 var loadingRequests = 0;
 
@@ -107,7 +106,7 @@ if (system.args.length === 1) {
     page.address = system.args[1];
     page.resources = [];
 
-    /*page.onLoadStarted = function () {
+    page.onLoadStarted = function () {
         page.startTime = new Date();
     };
 
@@ -115,7 +114,7 @@ if (system.args.length === 1) {
         if (status === 'success') {
             page.endTime = new Date();
         }
-    }*/
+    }
 
     page.onResourceRequested = function (req) {
         page.resources[req.id] = {
@@ -143,7 +142,6 @@ if (system.args.length === 1) {
             console.log('FAIL to load the address');
             phantom.exit(1);
         } else {
-            page.endTime = new Date();
             while(loadingRequests > 0)
                 page.title = page.evaluate(function () {
                     return document.title;
@@ -152,6 +150,6 @@ if (system.args.length === 1) {
                 console.log(JSON.stringify(har, undefined, 4));
                 phantom.exit();
             }
-       
+
     });
 }
