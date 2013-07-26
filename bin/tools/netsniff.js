@@ -110,12 +110,6 @@ if (system.args.length === 1) {
         page.startTime = new Date();
     };
 
-    page.onLoadFinished = function(status) {
-        if (status === 'success') {
-            page.endTime = new Date();
-        }
-    }
-
     page.onResourceRequested = function (req) {
         page.resources[req.id] = {
             request: req,
@@ -142,6 +136,7 @@ if (system.args.length === 1) {
             console.log('FAIL to load the address');
             phantom.exit(1);
         } else {
+            page.endTime = new Date();
             while(loadingRequests > 0)
                 page.title = page.evaluate(function () {
                     return document.title;
