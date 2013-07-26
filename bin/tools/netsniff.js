@@ -108,6 +108,10 @@ if (system.args.length === 1) {
         page.startTime = new Date();
     };
 
+    page.onLoadFinished = function(status) {
+        page.endTime = new Date();
+    }
+
     page.onResourceRequested = function (req) {
         page.resources[req.id] = {
             request: req,
@@ -115,6 +119,7 @@ if (system.args.length === 1) {
             endReply: null
         };
     };
+
 
     page.onResourceReceived = function (res) {
         if (res.stage === 'start') {
@@ -131,7 +136,6 @@ if (system.args.length === 1) {
             console.log('FAIL to load the address');
             phantom.exit(1);
         } else {
-            page.endTime = new Date();
             setTimeout(function() {
                 page.title = page.evaluate(function () {
                     return document.title;
