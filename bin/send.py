@@ -8,7 +8,7 @@ msg = {
     'account': 'me',
     'type': 'har',
     'nb': 1,
-    'user-agent': 'default',
+    'agent': 'default',
 }
 connection = pika.BlockingConnection(pika.ConnectionParameters(
                'localhost'))

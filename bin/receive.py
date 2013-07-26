@@ -67,7 +67,7 @@ def callback(ch, method, properties, body):
     print ' [x] Executing browser', content['url']
 
     #try:
-    harcontent = subprocess.Popen(['phantomjs', NETSNIFF_UTIL, content['url']], stdout=subprocess.PIPE).communicate()[0]
+    harcontent = subprocess.Popen(['phantomjs', NETSNIFF_UTIL, content['url'], content['agent']], stdout=subprocess.PIPE).communicate()[0]
     #harcontent = check_output(['phantomjs', NETSNIFF_UTIL, content['url'], content['agent']])
     #except CalledProcessError:
     #    print ' [x] Sub-process failed'
