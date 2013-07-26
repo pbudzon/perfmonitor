@@ -11,11 +11,12 @@ celery.config_from_object('celeryconfig')
 
 @celery.task
 def processtest(content):
-    try:
-        harcontent = check_output(['phantomjs', NETSNIFF_UTIL, content['url'], content['agent']])
-    except CalledProcessError:
-        print ' [x] Sub-process failed'
-        return False
+    #try:
+    harcontent = subprocess.Popen(['phantomjs', NETSNIFF_UTIL, content['url']], stdout=subprocess.PIPE).communicate()[0]
+    #    harcontent = check_output(['phantomjs', NETSNIFF_UTIL, content['url'], content['agent']])
+    #except CalledProcessError:
+    #    print ' [x] Sub-process failed'
+    #    return False
 
     try:
         jscontent = json.loads(harcontent)
@@ -47,8 +48,8 @@ def processcron(minutes):
     rows = dbcon.perfmonitor.sites.aggregate([
         {
          '$match': {'interval': minutes}
-        }, 
-        {'$unwind': "$urls"} 
+        },
+        {'$unwind': "$urls"}
     ])
 
     if not rows['result']:
@@ -66,6 +67,6 @@ def processcron(minutes):
         }
 
         processtest.delay(msg)
-    
+
     print 'Done running tasks for every %d minutes' % (minutes)
     return True
