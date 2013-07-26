@@ -95,6 +95,7 @@ function createHAR(address, title, startTime, resources)
 
 var page = require('webpage').create(),
     system = require('system');
+page.startTime = new Date();
 
 if (system.args.length === 1) {
     console.log('Usage: netsniff.js <some URL>');
@@ -134,7 +135,6 @@ if (system.args.length === 1) {
 
     page.open(page.address, function (status) {
         var har;
-        page.startTime = new Date();
         if (status !== 'success') {
             console.log('FAIL to load the address');
             phantom.exit(1);
