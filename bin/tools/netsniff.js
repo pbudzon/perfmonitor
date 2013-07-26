@@ -144,7 +144,7 @@ if (system.args.length === 1) {
                 page.title = page.evaluate(function () {
                     return document.title;
                 });
-                har = createHAR(page.address, page.title, page.startTime, page.endTime, page.resources);
+                har = createHAR(page.address, page.title, page.startTime, page.resources);
                 console.log(JSON.stringify(har, undefined, 4));
                 phantom.exit();
             }, 20000);
