@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import pika
-from subprocess import check_output, CalledProcessError
+import subprocess
+from subprocess import CalledProcessError
 import json
 import os
 from pymongo import MongoClient
@@ -54,22 +55,23 @@ def send_nack(ch, method):
 def callback(ch, method, properties, body):
     print " [x] Received %r" % (body,)
     content = json.loads(body)
-     
+
     # if the current count reached 0
     # there are no more requests left
     if content['nb'] <= 0:
-        # acknowledge the msg and quit 
+        # acknowledge the msg and quit
         send_ack(ch, method)
         print ' [x] No more requests left'
         return
 
     print ' [x] Executing browser', content['url']
 
-    try:
-        harcontent = check_output(['phantomjs', NETSNIFF_UTIL, content['url'], content['agent']])
-    except CalledProcessError:
-        print ' [x] Sub-process failed'
-        harcontent = None
+    #try:
+    harcontent = subprocess.Popen(['phantomjs', NETSNIFF_UTIL, content['url']], stdout=subprocess.PIPE).communicate()[0]
+    #harcontent = check_output(['phantomjs', NETSNIFF_UTIL, content['url'], content['agent']])
+    #except CalledProcessError:
+    #    print ' [x] Sub-process failed'
+    #    harcontent = None
 
     if harcontent:
         try:
