@@ -12,7 +12,7 @@ celery.config_from_object('celeryconfig')
 @celery.task
 def processtest(content):
     #try:
-    harcontent = subprocess.Popen(['phantomjs', NETSNIFF_UTIL, content['url']], stdout=subprocess.PIPE).communicate()[0]
+    harcontent = subprocess.Popen(['phantomjs', NETSNIFF_UTIL, content['url'], content['agent']], stdout=subprocess.PIPE).communicate()[0]
     #    harcontent = check_output(['phantomjs', NETSNIFF_UTIL, content['url'], content['agent']])
     #except CalledProcessError:
     #    print ' [x] Sub-process failed'
