@@ -5,16 +5,17 @@ About
 -----
 
 Web based tool built to monitor the front-end performances of websites. This version is based on webpagetest.org API.
+
 You will need an API key to use it.
 
 Requirements
 ------------
 
-MongoDB >= 2.2
-PHP >= 5.3.2 (and extensions: mongo)
-Python (and libs: pika, pymongo)
-RabbitMQ
-Apache
+* MongoDB >= 2.2
+* PHP >= 5.3.2 (and extensions: mongo)
+* Python (and libs: pika, pymongo)
+* RabbitMQ
+* Apache
 
 Installation
 ------------
