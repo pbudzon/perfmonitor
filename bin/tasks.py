@@ -57,12 +57,12 @@ def processtest(content):
             print('JSON decode failure')
             return -1
         return js['statusCode']
-        
+
     if content['agent'] is 'mobile':
         mobile = 1
     else:
         mobile = 0
-    url = 'http://www.webpagetest.org/runtest.php?url=%s&f=json&k=%s&runs=%d&=mobile=%d' % \
+    url = 'http://www.webpagetest.org/runtest.php?url=%s&f=json&k=%s&runs=%d&=mobile=%d&fvonly=1&location=Dulles:Chrome.DSL' % \
           (content['url'], WEBPAGEREST_API_KET, content['nb'], mobile)
     print("url => %s" % (url,))
     response = urllib2.urlopen(url).read()
