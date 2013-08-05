@@ -62,7 +62,7 @@ def processtest(content):
         mobile = 1
     else:
         mobile = 0
-    url = 'http://www.webpagetest.org/runtest.php?url=%s&f=json&r=%s&runs=%d&=mobile=%d' % \
+    url = 'http://www.webpagetest.org/runtest.php?url=%s&f=json&k=%s&runs=%d&=mobile=%d' % \
           (content['url'], WEBPAGEREST_API_KET, content['nb'], mobile)
     print("url => %s" % (url,))
     response = urllib2.urlopen(url).read()
