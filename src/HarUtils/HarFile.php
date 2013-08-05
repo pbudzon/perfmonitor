@@ -98,7 +98,7 @@ class HarFile
 
         foreach($this->content['log']['pages'] as $page)
         {
-            $pages[ $page['startedDateTime'] ] = new HarPage($page);
+            $pages[ $page['id'] ] = new HarPage($page);
         }
         
         ksort($pages);

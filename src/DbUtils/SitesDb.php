@@ -276,11 +276,14 @@ class SitesDb
 
         foreach($rows as $row)
         {
-            $onload = $row['log']['pages'][0]['pageTimings']['onLoad'];
-            if($onload)
-            {
-                $urls[ $row['log']['entries'][0]['request']['url'] ][] = $onload / 1000;
+            foreach($row['log']['pages'] as $page){
+                $onload = $page['pageTimings']['onLoad'];
+                if($onload)
+                {
+                    $urls[ $row['log']['entries'][0]['request']['url'] ][] = $onload / 1000;
+                }
             }
+
         }
         
         return $urls;
@@ -292,12 +295,14 @@ class SitesDb
 
         foreach($rows as $row)
         {
-            $date = new HarTime($row['log']['pages'][0]['startedDateTime']);
-            $urls[ $row['log']['entries'][0]['request']['url'] ][] = 
-                array(
-                    'value' => $row['log']['pages'][0]['pageTimings']['onLoad'] / 1000,
-                    'date' => $date,
-                );
+            foreach($row['log']['pages'] as $page){
+                $date = new HarTime($page['startedDateTime']);
+                $urls[ $row['log']['entries'][0]['request']['url'] ][] =
+                    array(
+                        'value' => $page['pageTimings']['onLoad'] / 1000,
+                        'date' => $date,
+                    );
+            }
         }
         
         return $urls;
