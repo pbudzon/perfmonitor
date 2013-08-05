@@ -150,7 +150,7 @@ class DefaultController extends Controller
                     'class' => 'input-mini',
                 ),
                 'constraints' => array(
-                    new Range(array('min' => 1, 'max' => 20)),
+                    new Range(array('min' => 1, 'max' => 100)),
                 ),
             ))
             ->getForm();

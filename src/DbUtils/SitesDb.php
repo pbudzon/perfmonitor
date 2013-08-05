@@ -20,8 +20,8 @@ class SitesDb
                 'url' => $row['log']['entries'][0]['request']['url'],
                 'date' => new HarTime($row['log']['pages'][0]['startedDateTime']),
                 'agent' => SitesDb::getRowField($row, 'agent'),
-                'loadtime' => SitesDb::getRowField($row['log']['pages'][0]['pageTimings'], 'onLoad'),
-                );
+                'loadtime' => SitesDb::getAverageRowField($row['log']['pages'], 'pageTimings', 'onLoad'),
+            );
         }
 
         return $requests;
@@ -71,6 +71,20 @@ class SitesDb
     static public function getRowField($row, $field, $default = null)
     {
         return array_key_exists($field, $row) ? $row[$field] : $default;
+    }
+
+    static public function getAverageRowField($rows, $index, $field, $default = null)
+    {
+        $results = array();
+        foreach($rows as $row){
+            if(array_key_exists($field, $row[$index])){
+                $results[] = $row[$index][$field];
+            }
+        }
+        if(empty($results)){
+            return $default;
+        }
+        return array_sum($results)/count($results);
     }
     
     static public function sumUp($rows)
