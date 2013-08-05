@@ -143,7 +143,7 @@ class DefaultController extends Controller
                     'class' => 'input-xxlarge',
                 )
             ))
-            ->add('agent', 'choice', array('label' => 'User-Agent', 'choices' => array('desktop' => 'Desktop', 'mobile' => 'Mobile'), 'expanded' => true))
+            ->add('agent', 'choice', array('label' => 'User-Agent', 'choices' => array('desktop' => 'Desktop', 'mobile' => 'Mobile'), 'expanded' => false))
             ->add('nb', 'integer', array(
                 'label' => 'Number of requests',
                 'attr' => array(
