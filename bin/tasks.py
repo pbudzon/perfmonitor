@@ -50,9 +50,9 @@ celery.config_from_object('celeryconfig')
 @celery.task
 def processtest(content):
     def getStatus(tid):
-        r = urllib2.urlopen(('http://www.webpagetest.org/testStatus.php?f=json&test=%s' % (tid,)))
+        r = urllib2.urlopen(('http://www.webpagetest.org/testStatus.php?f=json&test=%s' % (tid,))).read()
         try:
-            js = json.dumps(r)
+            js = json.loads(r)
         except ValueError:
             print('JSON decode failure')
             return -1
@@ -66,10 +66,9 @@ def processtest(content):
           (content['url'], WEBPAGEREST_API_KET, content['nb'], mobile)
     print("url => %s" % (url,))
     response = urllib2.urlopen(url).read()
-    # response = "{u'data': {u'testId': '091111_2XFH',u'userUrl': u'http://www.webpagetest.org/result/091111_2XFH/',u'xmlUrl': u'http://www.webpagetest.org/xmlResult/091111_2XFH/'},'u'requestId': 12345,u'statusCode': 200,u'statusText': u'OK'}"
 
     try:
-        js = json.dumps(response)
+        js = json.loads(response)
     except ValueError:
         print('JSON decode failure')
         return False
@@ -80,8 +79,10 @@ def processtest(content):
     testId = js['testId']
 
     while True:
-        status = getStatus(js['data']['testId'])
+        print(' [x] Checking test status %s' % (testId,))
+        status = getStatus(testId)
         if status is 100:
+            print(' [x] Got status 100, sleeping')
             time.sleep(DEFAULT_SLEEP_TIME)
             continue
         elif status is 200:
@@ -99,14 +100,14 @@ def processtest(content):
 
             try:
                 dbcon.perfmonitor.har.insert(harcontent)
-                print ' [x] HAR response saved'
+                print(' [x] HAR response saved')
             except:
                 print(' [x] Unable to save HAR response, sending back')
                 return False
 
             return True
         else:
-            print("Error while processing data from remote API. Error code='%d'" % (status,))
+            print("[x] Error while processing data from remote API. Error code='%d'" % (status,))
             return False
 
 
