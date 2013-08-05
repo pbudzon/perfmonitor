@@ -76,7 +76,7 @@ def processtest(content):
         print("Error while processing data from remote API. Error code='%d', message='%s'" % (js['statusCode'], js['statusText']))
         return False
 
-    testId = js['testId']
+    testId = js['data']['testId']
 
     while True:
         print(' [x] Checking test status %s' % (testId,))
