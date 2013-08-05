@@ -55,8 +55,9 @@ def processtest(content):
             js = json.loads(r)
         except ValueError:
             print('JSON decode failure')
-            return -1
-        return js['statusCode']
+            failure['statusCode'] = 666
+            return failure
+        return js
 
     if content['agent'] is 'mobile':
         mobile = 1
@@ -80,13 +81,16 @@ def processtest(content):
 
     while True:
         print(' [x] Checking test status %s' % (testId,))
-        status = getStatus(testId)
-        if status is 100:
-            print(' [x] Got status 100, sleeping')
+        status_data = getStatus(testId)
+        status = status_data['statusCode']
+        if 100 <= status <= 199:
+            print(' [x] Got status %d, sleeping' % (status,))
             time.sleep(DEFAULT_SLEEP_TIME)
             continue
         elif status is 200:
-            harharhar = urllib2.urlopen('http://httparchive.webpagetest.org/export.php?test=%s' % (testId,))
+            result_url = status_data['data']['jsonUrl']
+            print("result_url => %s" % (result_url,))
+            harharhar = urllib2.urlopen(result_url).read()
             try:
                 harcontent = json.loads(harharhar)
             except ValueError:
