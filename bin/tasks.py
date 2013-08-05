@@ -57,7 +57,7 @@ def processtest(content):
             print('JSON decode failure')
             return -1
         return js['statusCode']
-
+        
     if content['agent'] is 'mobile':
         mobile = 1
     else:
@@ -77,7 +77,6 @@ def processtest(content):
         return False
 
     testId = js['data']['testId']
-    resultUrl = js['data']['jsonUrl']
 
     while True:
         print(' [x] Checking test status %s' % (testId,))
@@ -87,6 +86,7 @@ def processtest(content):
             time.sleep(DEFAULT_SLEEP_TIME)
             continue
         elif status is 200:
+            resultUrl = 'http://www.webpagetest.org/export.php?test=%s' % (testId,)
             print(' [x] Getting result from %s' % (resultUrl,))
             harharhar = urllib2.urlopen(resultUrl).read()
             try:
@@ -103,8 +103,9 @@ def processtest(content):
             try:
                 dbcon.perfmonitor.har.insert(harcontent)
                 print(' [x] HAR response saved')
-            except:
-                print(' [x] Unable to save HAR response, sending back')
+            except Exception as e:
+                print e
+                print(' [x] Unable to save HAR response')
                 return False
 
             return True
