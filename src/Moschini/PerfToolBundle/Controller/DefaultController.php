@@ -161,6 +161,7 @@ class DefaultController extends Controller
             if($form->isValid())
             {
                 $data = $form->getData();
+
                 $msg = array(
                     'url' => $data['url'],
                     'site' => $data['site'],
@@ -169,10 +170,23 @@ class DefaultController extends Controller
                     'type' => 'har', //$data['type'],
                     'agent' => $data['agent'],
                 );
-
-                // Send to background job
                 $celery = new \Celery('localhost', 'guest', 'guest', '/');
-                $celery->PostTask('tasks.processtest', array($msg));
+
+                //schedule up to 5 runs per one task
+                $max_nb_at_once = 5; //maximum number of runs for one task
+                $tasks_to_schedule = ceil($data['nb']/$max_nb_at_once);
+                for($i = 1; $i <= $tasks_to_schedule; $i++){
+                    if($data['nb'] > $max_nb_at_once){
+                        $msg['nb'] = $max_nb_at_once;
+                    }
+                    else{
+                        $msg['nb'] = $data['nb'];
+                    }
+
+                    // Send to background job
+                    $celery->PostTask('tasks.processtest', array($msg));
+                }
+
                 // If no site has been defined, use the one used for this request 
                 if(!$site){
                     $site = $data['site'];
