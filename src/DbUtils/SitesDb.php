@@ -21,6 +21,7 @@ class SitesDb
                 'date' => new HarTime($row['log']['pages'][0]['startedDateTime']),
                 'agent' => SitesDb::getRowField($row, 'agent'),
                 'loadtime' => SitesDb::getAverageRowField($row['log']['pages'], 'pageTimings', 'onLoad'),
+                'runs' => count($row['log']['pages'])
             );
         }
 
